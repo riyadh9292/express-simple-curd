@@ -22,7 +22,7 @@ app.use(express.json());
 app.use("/api/user", usersRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("yellow");
   // res.sendFile(__dirname + "/public/test.html");
   // res.render("", {
   //   id: 5,
