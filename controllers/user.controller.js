@@ -1,5 +1,8 @@
 const fs = require("fs");
 
+const users = fs.readFileSync("users.json");
+const parsedUsers = JSON.parse(users);
+
 function rand(items) {
   // "|" for a kinda "int div"
   return items[(items.length * Math.random()) | 0];
@@ -7,11 +10,17 @@ function rand(items) {
 
 module.exports.getRandomUser = (req, res, next) => {
   let randomUser = {};
-  const users = fs.readFileSync("users.json");
-  randomUser = rand(JSON.parse(users));
+  randomUser = rand(parsedUsers);
   res.send(randomUser);
-  // const { limit, page } = req.query;
-  // console.log(limit, page);
-  // undefined.test();
-  // res.json(tools.slice(0, limit));
+};
+module.exports.getAllUser = (req, res, next) => {
+  // let randomUser = {};
+  const { start, end } = req.query;
+  console.log(start, end);
+  // console.log(parsedUsers[(start, end)]);
+  if (start && end) {
+    res.send(parsedUsers.slice(start, end));
+  } else {
+    res.send(parsedUsers);
+  }
 };
