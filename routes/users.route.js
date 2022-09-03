@@ -20,6 +20,34 @@ router
    
    */
   .get(userControllers.getAllUser);
+router
+  .route("/save")
+  /**
+   * @api {post} /save a user
+   
+   */
+  .post(userControllers.saveAuser);
+router
+  .route("/update/:id")
+  /**
+   * @api {post} /update a user
+   
+   */
+  .patch(userControllers.updateAuser);
+router
+  .route("/bulk-update")
+  /**
+   * @api {patch} /update multiple user
+   
+   */
+  .patch(userControllers.updateMultipleUser);
+router
+  .route("/delete/:id")
+  /**
+   * @api {delete} /delete a user
+   
+   */
+  .delete(userControllers.deleteUser);
 
 // router.route("/all").get(userCon);
 // router.route("/save").post();
