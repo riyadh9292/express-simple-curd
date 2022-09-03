@@ -19,7 +19,7 @@ app.use(express.json());
 
 // dbConnect();
 
-app.use("/api/users", usersRoutes);
+app.use("/api/user", usersRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

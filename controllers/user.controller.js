@@ -25,16 +25,20 @@ module.exports.getAllUser = (req, res, next) => {
   }
 };
 module.exports.saveAuser = (req, res) => {
-  console.log(req.body);
   parsedUsers.push(req.body);
   const write = fs.writeFile("users.json", JSON.stringify(parsedUsers), (err) =>
     err ? console.log(err) : console.log("success")
   );
-  res.send(parsedUsers);
+  res.status(201).send({
+    success: true,
+    messages: "Created",
+    data: parsedUsers,
+  });
 };
 module.exports.updateAuser = (req, res) => {
   const { id } = req.params;
   const newData = parsedUsers.find((user) => Number(user.id) === Number(id));
+
   try {
     newData.id = id;
     newData.contact = req.body.contact ?? newData.contact;
@@ -64,8 +68,22 @@ module.exports.updateAuser = (req, res) => {
 };
 module.exports.updateMultipleUser = (req, res) => {
   const userArray = req.body;
-  // console.log("user array", userArray);
-  // const updatedUserArray = [];
+  //validate the user id
+  try {
+    for (let i = 0; i < userArray.length; i++) {
+      if (!userArray[i].id) {
+        res.status(404).send({
+          success: false,
+          messages: "User id not found",
+          data: userArray,
+        });
+        return;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  const userIds = userArray.map((user) => user.id && user.id);
 
   for (let i = 0; i < parsedUsers.length; i++) {
     for (let j = 0; j < userArray.length; j++) {
@@ -82,8 +100,20 @@ module.exports.deleteUser = (req, res) => {
   const { id } = req.params;
   try {
     const newUsers = parsedUsers.filter((user) => user.id !== id);
-    const write = fs.writeFile("users.json", JSON.stringify(newUsers), (err) =>
-      err ? res.send(err) : res.send("successly delete")
+    // validate the user id
+    if (newUsers.length === newUsers.length) {
+      res.status(404).send({
+        success: true,
+        messages: "No user found",
+        data: parsedUsers,
+      });
+      return;
+    }
+    const write = fs.writeFile(
+      "users.json",
+      JSON.stringify(newUsers),
+      (err) => {}
+      // err ? res.send(err) : res.send("successly delete")
     );
   } catch (error) {
     res.send("please provide a valid id");
